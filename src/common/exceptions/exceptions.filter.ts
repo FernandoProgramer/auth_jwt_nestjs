@@ -66,12 +66,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         if (process.env.NODE_ENV !== 'production') {
             console.error('Exception Debugging =>> ', exception);
         }
-        
-        // Manejo de errores generales (500 - Internal Server Error)
-        if (exception instanceof Error) {
-            return this.handleResponse(response, 500, exception.message || 'Unexpected error');
-        }
 
+        // // Manejo de errores generales (500 - Internal Server Error)
         return this.handleResponse(response, 500, 'Internal Server Error');
 
     }
