@@ -17,14 +17,9 @@ export class AuthService {
   }
 
   async Register(data: RegisterDto) {
-    try {
-      const response = await this.prisma.users.create({
-        data
-      });
-      return response
-    } catch (error) {
-      throw new InternalServerErrorException()
-    }
+    const response = await this.prisma.users.create({
+      data
+    });
+    return response
   }
-
 }
