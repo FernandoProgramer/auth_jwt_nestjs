@@ -46,4 +46,8 @@ export class AuthService {
     return new_user;
 
   }
+
+  /**
+   * More services...
+   */
 }

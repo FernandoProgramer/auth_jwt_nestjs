@@ -1,8 +1,8 @@
-import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, NotFoundException, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import { AccTokenGuard } from './guards/accToken.guard';
 
 
@@ -53,6 +53,23 @@ export class AuthController {
   GetCookies(@Req() request: Request) {
     const cookies = request.headers.cookie;
     return { cookies };
+  }
+
+
+  @Post('/logout')
+  Logout(@Req() request: Request, @Res() response: Response) {
+    const { accToken, refreshToken } = request.cookies;
+
+    if (!accToken && !refreshToken) {
+      throw new NotFoundException('Not found tokens');
+    }
+
+    return response.clearCookie('refreshToken').clearCookie('accToken').json({
+      successful: true,
+      message: 'Successfully logout, removed tokens',
+      statusCode: 200
+    })
+
   }
 
 }
