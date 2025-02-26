@@ -21,18 +21,22 @@ export class AuthController {
   @HttpCode(200)
   async Login(@Body() loginDto: LoginDto, @Res() response: Response) {
     const { accToken, refreshToken } = await this.authService.Login(loginDto);
+
+    const maxAgeAccessToken: number = 9 * 60 * 1000; // 9 minuts
+    const maxAgeRefreshToken: number = 6 * 24 * 60 * 60 * 1000; // 6 days
+
     return response
       .cookie('accToken', accToken, { // Saved in Cookie Access token
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 9 * 60 * 1000 // 9 minuts
+        maxAge: maxAgeAccessToken
       })
       .cookie('refreshToken', refreshToken, { // Saved in Cookie Refresh token
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        maxAge: maxAgeRefreshToken
       }).
       json({
         successful: true,
